@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registration Page - Test Site</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f7f8;
+      margin: 0;
+    }
+    .form-container {
+      background: #fff;
+      max-width: 400px;
+      margin: 5rem auto;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-weight: bold;
+      color: #555;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    .error-message {
+      color: red;
+      font-size: 0.85rem;
+      display: none;
+      margin-top: -0.7rem;
+      margin-bottom: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 0.7rem;
+      font-size: 1rem;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .success-message {
+      text-align: center;
+      color: green;
+      font-weight: bold;
+      display: none;
+    }
+    .info-card-small {
+      margin-top: 1rem;
+      background-color: #e3fafc;
+      border: 1px solid #66d9e8;
+      padding: 0.6rem 1rem;
+      border-radius: 5px;
+      font-size: 0.85rem;
+      color: #0b7285;
+      box-shadow: 0 1px 3px rgba(11, 114, 133, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div id="header-placeholder"></div>
+
+  <!-- Registration Form -->
+  <div class="form-container">
+    <h2>Register</h2>
+    <form id="registration-form" novalidate>
+      <label for="name">Full Name</label>
+      <input type="text" id="name" name="name" required />
+      <div class="error-message" id="name-error">Please enter your name.</div>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required />
+      <div class="error-message" id="email-error">Enter a valid email.</div>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required minlength="8" />
+      <div class="error-message" id="password-error">Password must be at least 8 characters.</div>
+
+      <button type="submit">Register</button>
+    </form>
+
+    <div class="success-message" id="register-success">Registration successful!</div>
+
+    <div class="info-card-small">
+      <strong>Sample Registration:</strong><br />
+      Name: <code>Test User</code><br />
+      Email: <code>user@example.com</code><br />
+      Password: <code>Welcome123</code>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div id="footer-placeholder"></div>
+
+  <script src="site.js"></script>
+  <script>
+    const form = document.getElementById('registration-form');
+    const name = document.getElementById('name');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const nameError = document.getElementById('name-error');
+    const emailError = document.getElementById('email-error');
+    const passwordError = document.getElementById('password-error');
+    const successMsg = document.getElementById('register-success');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      nameError.style.display = 'none';
+      emailError.style.display = 'none';
+      passwordError.style.display = 'none';
+      successMsg.style.display = 'none';
+
+      let valid = true;
+
+      if (name.value.trim() === '') {
+        nameError.style.display = 'block';
+        valid = false;
+      }
+
+      const emailPattern = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+      if (!emailPattern.test(email.value.trim())) {
+        emailError.style.display = 'block';
+        valid = false;
+      }
+
+      if (password.value.trim().length < 8) {
+        passwordError.style.display = 'block';
+        valid = false;
+      }
+
+      if (valid) {
+        successMsg.style.display = 'block';
+        form.reset();
+      }
+    });
+  </script>
+</body>
+</html>
