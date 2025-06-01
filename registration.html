@@ -3,28 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Registration Page - Test Site</title>
+  <title>Registration Page - Demo Test Site</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #f4f7f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
       margin: 0;
     }
-    .form-container {
+    .register-container {
       background: #fff;
-      max-width: 400px;
-      margin: 5rem auto;
       padding: 2rem;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 350px;
     }
     h2 {
       text-align: center;
       margin-bottom: 1.5rem;
       color: #333;
     }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
     label {
-      display: block;
       margin-bottom: 0.3rem;
       font-weight: bold;
       color: #555;
@@ -32,22 +38,25 @@
     input[type="text"],
     input[type="email"],
     input[type="password"] {
-      width: 100%;
       padding: 0.5rem;
       margin-bottom: 1rem;
       border: 1px solid #ccc;
       border-radius: 4px;
       font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+    input:focus {
+      border-color: #007bff;
+      outline: none;
     }
     .error-message {
       color: red;
       font-size: 0.85rem;
-      display: none;
       margin-top: -0.7rem;
-      margin-bottom: 1rem;
+      margin-bottom: 0.8rem;
+      display: none;
     }
     button {
-      width: 100%;
       padding: 0.7rem;
       font-size: 1rem;
       background: #007bff;
@@ -55,106 +64,136 @@
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      transition: background 0.3s ease;
     }
     button:hover {
       background: #0056b3;
     }
     .success-message {
       text-align: center;
-      color: green;
-      font-weight: bold;
-      display: none;
-    }
-    .info-card-small {
       margin-top: 1rem;
-      background-color: #e3fafc;
-      border: 1px solid #66d9e8;
-      padding: 0.6rem 1rem;
-      border-radius: 5px;
-      font-size: 0.85rem;
-      color: #0b7285;
-      box-shadow: 0 1px 3px rgba(11, 114, 133, 0.3);
+      font-weight: bold;
+      color: green;
+      display: none;
     }
   </style>
 </head>
 <body>
+   <div id="header-placeholder"></div>
 
-  <!-- Header -->
-  <div id="header-placeholder"></div>
-
-  <!-- Registration Form -->
-  <div class="form-container">
-    <h2>Register</h2>
+  <div class="register-container">
+    <h2>Create Account</h2>
     <form id="registration-form" novalidate>
-      <label for="name">Full Name</label>
-      <input type="text" id="name" name="name" required />
-      <div class="error-message" id="name-error">Please enter your name.</div>
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" placeholder="Enter username" required minlength="3" maxlength="20" />
+      <div id="username-error" class="error-message">Username must be 3-20 characters.</div>
 
       <label for="email">Email</label>
-      <input type="email" id="email" name="email" required />
-      <div class="error-message" id="email-error">Enter a valid email.</div>
+      <input type="email" id="email" name="email" placeholder="Enter your email" required />
+      <div id="email-error" class="error-message">Please enter a valid email address.</div>
 
       <label for="password">Password</label>
-      <input type="password" id="password" name="password" required minlength="8" />
-      <div class="error-message" id="password-error">Password must be at least 8 characters.</div>
+      <input type="password" id="password" name="password" placeholder="Enter password" required minlength="8" maxlength="30" />
+      <div id="password-error" class="error-message">Password must be 8-30 characters.</div>
+
+      <label for="confirm-password">Confirm Password</label>
+      <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm password" required />
+      <div id="confirm-password-error" class="error-message">Passwords do not match.</div>
 
       <button type="submit">Register</button>
     </form>
 
-    <div class="success-message" id="register-success">Registration successful!</div>
-
-    <div class="info-card-small">
-      <strong>Sample Registration:</strong><br />
-      Name: <code>Test User</code><br />
-      Email: <code>user@example.com</code><br />
-      Password: <code>Welcome123</code>
-    </div>
+    <div id="success-message" class="success-message">Registration successful!</div>
   </div>
-
-  <!-- Footer -->
+ 
   <div id="footer-placeholder"></div>
 
-  <script src="site.js"></script>
   <script>
     const form = document.getElementById('registration-form');
-    const name = document.getElementById('name');
+    const username = document.getElementById('username');
     const email = document.getElementById('email');
     const password = document.getElementById('password');
-    const nameError = document.getElementById('name-error');
+    const confirmPassword = document.getElementById('confirm-password');
+
+    const usernameError = document.getElementById('username-error');
     const emailError = document.getElementById('email-error');
     const passwordError = document.getElementById('password-error');
-    const successMsg = document.getElementById('register-success');
+    const confirmPasswordError = document.getElementById('confirm-password-error');
+    const successMessage = document.getElementById('success-message');
 
-    form.addEventListener('submit', function (e) {
+    form.addEventListener('submit', function(e) {
       e.preventDefault();
-      nameError.style.display = 'none';
+
+      // Hide errors and success message
+      usernameError.style.display = 'none';
       emailError.style.display = 'none';
       passwordError.style.display = 'none';
-      successMsg.style.display = 'none';
+      confirmPasswordError.style.display = 'none';
+      successMessage.style.display = 'none';
 
       let valid = true;
 
-      if (name.value.trim() === '') {
-        nameError.style.display = 'block';
+      // Username validation
+      const usernameVal = username.value.trim();
+      if (usernameVal.length < 3 || usernameVal.length > 20) {
+        usernameError.style.display = 'block';
         valid = false;
       }
 
-      const emailPattern = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
-      if (!emailPattern.test(email.value.trim())) {
+      // Email validation
+      const emailVal = email.value.trim();
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(emailVal)) {
         emailError.style.display = 'block';
         valid = false;
       }
 
-      if (password.value.trim().length < 8) {
+      // Password validation
+      const passwordVal = password.value.trim();
+      if (passwordVal.length < 8 || passwordVal.length > 30) {
         passwordError.style.display = 'block';
         valid = false;
       }
 
-      if (valid) {
-        successMsg.style.display = 'block';
-        form.reset();
+      // Confirm password validation
+      const confirmPasswordVal = confirmPassword.value.trim();
+      if (confirmPasswordVal !== passwordVal || confirmPasswordVal === '') {
+        confirmPasswordError.style.display = 'block';
+        valid = false;
+      }
+
+      if (!valid) {
+        return;
+      }
+
+      // If all valid
+      successMessage.style.display = 'block';
+      form.reset();
+    });
+
+    // Optional: Real-time validation to hide errors on input
+    username.addEventListener('input', () => {
+      if (username.value.trim().length >=3 && username.value.trim().length <= 20) {
+        usernameError.style.display = 'none';
+      }
+    });
+    email.addEventListener('input', () => {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (emailPattern.test(email.value.trim())) {
+        emailError.style.display = 'none';
+      }
+    });
+    password.addEventListener('input', () => {
+      if (password.value.trim().length >= 8 && password.value.trim().length <= 30) {
+        passwordError.style.display = 'none';
+      }
+    });
+    confirmPassword.addEventListener('input', () => {
+      if (confirmPassword.value === password.value) {
+        confirmPasswordError.style.display = 'none';
       }
     });
   </script>
+
 </body>
 </html>
